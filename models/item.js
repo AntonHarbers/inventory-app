@@ -17,11 +17,11 @@ const ItemSchema = new Schema({
   },
 });
 
-ItemSchema.virtual('url').get(() => {
-  return `/inventory/items/${this._id}`;
+ItemSchema.virtual('url').get(function () {
+  return `/inventory/item/${this._id}`;
 });
 
-ItemSchema.virtual('total_value').get(() => {
+ItemSchema.virtual('total_value').get(function () {
   return this.num_in_stock * this.price;
 });
 

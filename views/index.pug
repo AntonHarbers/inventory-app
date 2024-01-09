@@ -1,5 +1,8 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h1(style="margin-top:2rem")= title
+  p Welcome to a very basic Express website developed for the odin project.
+
+  p Items in Inventory: #{item_count}
+  p Categories in Inventory: #{category_count}
