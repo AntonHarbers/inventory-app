@@ -1,0 +1,19 @@
+extends layout 
+
+block content 
+    h1 #{title} :   #{category.name}
+
+    if category_items.length 
+        p The following items need to be deleted or have their category changed before this category can be deleted: 
+        ul 
+            for item in category_items 
+                li 
+                    a(href=item.url) #{item.name}
+
+    else 
+        p Do you really want to delete this Category?
+
+        form(method='POST')
+            div.form-group
+                input#categoryid.form-control(type='hidden' name='categoryid', value=category._id)
+            button.btn.btn-primary(type='submit') Delete Category
