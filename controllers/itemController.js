@@ -4,6 +4,8 @@ const Category = require('../models/category');
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
 
+require('dotenv').config();
+
 exports.index = asyncHandler(async (req, res, next) => {
   const [itemCount, categoryCount, items] = await Promise.all([
     Item.countDocuments({}).exec(),
@@ -148,6 +150,9 @@ exports.item_update_post = [
     .trim()
     .isNumeric({ min: 0 })
     .escape(),
+  body('pass', 'Incorrect Admin Password')
+    .equals(process.env.ADMINPASS)
+    .escape(),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
@@ -167,7 +172,7 @@ exports.item_update_post = [
         title: 'Update Item',
         categories: allCategories,
         item: item,
-        errors: errors,
+        errors: errors.errors,
       });
       return;
     } else {
@@ -195,8 +200,29 @@ exports.item_delete_get = [
 ];
 
 exports.item_delete_post = [
+  body('pass', 'Incorrect Admin Password')
+    .equals(process.env.ADMINPASS)
+    .escape(),
   asyncHandler(async (req, res, next) => {
-    await Item.findByIdAndDelete(req.body.itemid);
-    res.redirect('/inventory/items');
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      const item = await Item.findById(req.params.id).exec();
+
+      if (item === null) {
+        const err = new Error('Item could not be found');
+        err.status = 404;
+        return next(err);
+      }
+
+      res.render('item_delete', {
+        title: 'Delete Item',
+        item: item,
+        errors: errors.errors,
+      });
+    } else {
+      await Item.findByIdAndDelete(req.body.itemid);
+      res.redirect('/inventory/items');
+    }
   }),
 ];

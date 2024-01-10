@@ -8,4 +8,12 @@ block content
     form(method='POST')
         div.form-group
             input#itemid.form-control(type='hidden' name='itemid', value=item._id)
+        div.form-group
+            label(for='pass') Admin Password:
+            input#pass.form-control(type='password' name='pass')
         button.btn.btn-primary(type='submit') Delete Item
+
+    if errors 
+        ul 
+            for error in errors
+                li!= error.msg

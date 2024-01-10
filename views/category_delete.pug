@@ -16,4 +16,12 @@ block content
         form(method='POST')
             div.form-group
                 input#categoryid.form-control(type='hidden' name='categoryid', value=category._id)
+            div.form-group
+                label(for='pass') Admin Password:
+                input#pass.form-control(type='password' name='pass')
             button.btn.btn-primary(type='submit') Delete Category
+
+    if errors
+        ul
+            for error in errors
+                li!= error.msg 

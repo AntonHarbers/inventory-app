@@ -11,6 +11,10 @@ block content
         div.form-group
             label(for="description") Description:
             input#description.form-control(type='text' placeholder='Some details about the new category...' name='description' required value=(undefined===category ? '' : category.description))
+        if category 
+            div.form-group
+                label(for='pass') Admin Password: 
+                input#pass.form-control(type='password' minLength=1 name='pass')
         button.btn.btn-primary(type='submit') Submit
 
     if errors

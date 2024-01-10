@@ -4,6 +4,8 @@ const Item = require('../models/item');
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
 
+require('dotenv').config();
+
 exports.category_detail = [
   asyncHandler(async (req, res, next) => {
     const [category, allItemsInCategory] = await Promise.all([
@@ -92,6 +94,9 @@ exports.category_update_post = [
     .trim()
     .isLength({ min: 1 })
     .escape(),
+  body('pass', 'Incorrect Admin Password')
+    .equals(process.env.ADMINPASS)
+    .escape(),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
@@ -105,7 +110,7 @@ exports.category_update_post = [
       res.render('category_form', {
         title: 'Update Category',
         category: category,
-        errors: errors,
+        errors: errors.errors,
       });
     } else {
       const updatedCategory = await Category.findByIdAndUpdate(
@@ -140,8 +145,25 @@ exports.category_delete_get = [
 ];
 
 exports.category_delete_post = [
+  body('pass', 'Incorrect Admin Password')
+    .equals(process.env.ADMINPASS)
+    .escape(),
   asyncHandler(async (req, res, next) => {
-    await Category.findByIdAndDelete(req.body.categoryid);
-    res.redirect('/inventory/categories');
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      const category = await Category.findById(req.params.id).exec();
+      categoryItems = [];
+
+      res.render('category_delete', {
+        title: 'Delete Category',
+        category: category,
+        category_items: categoryItems,
+        errors: errors.errors,
+      });
+    } else {
+      await Category.findByIdAndDelete(req.body.categoryid);
+      res.redirect('/inventory/categories');
+    }
   }),
 ];
