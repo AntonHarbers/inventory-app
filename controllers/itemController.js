@@ -19,12 +19,18 @@ exports.index = asyncHandler(async (req, res, next) => {
 
 exports.item_create_get = [
   asyncHandler(async (req, res, next) => {
-    res.send('Not yet implemented');
+    const allCategories = await Category.find({}).exec();
+
+    res.render('item_form', {
+      title: 'Add new Item',
+      categories: allCategories,
+    });
   }),
 ];
 
 exports.item_create_post = [
   asyncHandler(async (req, res, next) => {
+    console.log(req.body);
     res.send('Not yet implemented');
   }),
 ];
