@@ -4,7 +4,7 @@
 
 Welcome to the Inventory Express App, a comprehensive inventory management system developed as part of the Odin Project curriculum. This application, built using Node.js and Express, is perfect for anyone looking to implement a straightforward and efficient system for tracking items and categories in their inventory.
 
-[Live Link]()
+[Live Link](https://tan-dog-spaghetti.glitch.me/)
 
 ## Project Origin
 

@@ -7,6 +7,9 @@
     "devstart": "nodemon ./bin/www",
     "serverstart": "SET DEBUG=express-inventory-app:* & npm run devstart"
   },
+  "engines": {
+    "node": ">=20.10.0"
+  },
   "dependencies": {
     "compression": "^1.7.4",
     "cookie-parser": "~1.4.4",
