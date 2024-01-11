@@ -9,6 +9,8 @@ block content
         div.form-group
             input#itemid.form-control(type='hidden' name='itemid', value=item._id)
         div.form-group
+            input#oldimage.form-control(type='hidden' name='oldimage', value=item.imageUrl)
+        div.form-group
             label(for='pass') Admin Password:
             input#pass.form-control(type='password' name='pass')
         button.btn.btn-primary(type='submit') Delete Item

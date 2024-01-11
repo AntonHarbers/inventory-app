@@ -4,7 +4,7 @@ block content
 
     h1=title 
 
-    form(method='POST')
+    form(method='POST' enctype='multipart/form-data')
         div.form-group
             label(for="name") Name:
             input#name.form-control(type="text" placeholder='Name of new Item' name='name' required value=(undefined===item ? '' : item.name))
@@ -29,6 +29,13 @@ block content
                             option(value=category._id) #{category.name}
                     else
                         option(value=category._id) #{category.name}
+        if item 
+            if item.imageUrl != ''
+                img(src='/uploads/' + item.imageUrl, alt=item.name)
+                input#oldimage.form-control(type='hidden' name='oldimage' value=item.imageUrl)
+        div.form-group
+            label(for='image') Image (optional):
+            input#image.form-control(type='file' name='image')
         if item 
             div.form-group
                 label(for="pass") Admin Password: 

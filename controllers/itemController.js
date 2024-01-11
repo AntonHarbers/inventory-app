@@ -1,5 +1,7 @@
 const Item = require('../models/item');
 const Category = require('../models/category');
+const fs = require('fs');
+const path = require('path');
 
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
@@ -30,7 +32,6 @@ exports.index = asyncHandler(async (req, res, next) => {
 exports.item_detail = [
   asyncHandler(async (req, res, next) => {
     const item = await Item.findById(req.params.id).populate('category').exec();
-
     if (item === null) {
       const err = new Error('Item not found');
       err.status = 404;
@@ -101,6 +102,7 @@ exports.item_create_post = [
         category: req.body.category,
         price: req.body.price,
         num_in_stock: req.body.num_in_stock,
+        imageUrl: req.file ? req.file.filename : '',
       });
       await item.save();
       res.redirect(item.url);
@@ -163,11 +165,27 @@ exports.item_update_post = [
       price: req.body.price,
       num_in_stock: req.body.num_in_stock,
       _id: req.params.id,
+      imageUrl: req.body.oldimage,
     });
 
     if (!errors.isEmpty()) {
       const allCategories = await Category.find({}).sort('name').exec();
 
+      if (req.file) {
+        const imagePath = path.join(
+          __dirname,
+          '../public/uploads/',
+          req.file.filename
+        );
+        if (fs.existsSync(imagePath)) {
+          fs.unlink(imagePath, (err) => {
+            if (err) {
+              console.log(err);
+              return;
+            }
+          });
+        }
+      }
       res.render('item_form', {
         title: 'Update Item',
         categories: allCategories,
@@ -176,7 +194,40 @@ exports.item_update_post = [
       });
       return;
     } else {
-      const updatedItem = await Item.findByIdAndUpdate(req.params.id, item, {});
+      // Check if a new file is uploaded and an old image exists
+      if (req.file && req.body.oldimage) {
+        const oldImagePath = path.join(
+          __dirname,
+          '../public/uploads/',
+          req.body.oldimage
+        );
+        // Delete the old image file
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlink(oldImagePath, (err) => {
+            if (err) {
+              console.error(err);
+              return;
+            }
+            // File deleted successfully
+          });
+        }
+      }
+
+      const newItem = new Item({
+        name: req.body.name,
+        description: req.body.description,
+        category: req.body.category,
+        price: req.body.price,
+        num_in_stock: req.body.num_in_stock,
+        _id: req.params.id,
+        ...(req.file && { imageUrl: req.file.filename }),
+      });
+
+      const updatedItem = await Item.findByIdAndUpdate(
+        req.params.id,
+        newItem,
+        {}
+      );
       res.redirect(updatedItem.url);
     }
   }),
@@ -221,6 +272,24 @@ exports.item_delete_post = [
         errors: errors.errors,
       });
     } else {
+      if (req.body.oldimage) {
+        if (req.body.oldimage == '') return;
+        const oldImagePath = path.join(
+          __dirname,
+          '../public/uploads/',
+          req.body.oldimage
+        );
+        // Delete the old image file
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlink(oldImagePath, (err) => {
+            if (err) {
+              console.error(err);
+              return;
+            }
+            // File deleted successfully
+          });
+        }
+      }
       await Item.findByIdAndDelete(req.body.itemid);
       res.redirect('/inventory/items');
     }

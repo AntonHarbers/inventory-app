@@ -3,12 +3,15 @@ extends layout
 block content 
     h1 #{title}: #{item.name}
 
+    if item.imageUrl
+        img(src='/uploads/' + item.imageUrl, alt=item.name)
+
     p Description: #{item.description}
     p Price per unit: #{item.price} $ 
     p Amount in Stock: #{item.num_in_stock}
     p Category:
         a(href=item.category.url)  #{item.category.name}
-    
+
     hr
     p 
         a(href=item.url+'/delete') Delete Item
