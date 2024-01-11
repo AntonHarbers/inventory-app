@@ -70,10 +70,3 @@ While this project is a part of my portfolio and closed for direct contributions
 ## Final Notes
 
 As a learning endeavor within the Odin Project's curriculum, this application emphasizes practical application of web development principles. It serves as a showcase of my journey and skills in full-stack development.
-
-# Todos:
-
-- Implement category images
-- Implement remove image functionality
-- Update styling
-- Deploy

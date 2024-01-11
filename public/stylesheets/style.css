@@ -3,3 +3,29 @@
   padding: 0;
   list-style: none;
 }
+
+body {
+  background-color: rgb(181, 181, 181);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  gap: 1rem;
+}
+
+label {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+input {
+  border-radius: 10px;
+  font-size: 1.3rem;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  padding: 1rem;
+}
